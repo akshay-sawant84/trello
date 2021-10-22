@@ -11,10 +11,8 @@
   "dependencies": {
     "bootstrap": "^4.6.0",
     "next": "11.1.2",
-    "rc-drawer": "^4.4.2",
     "react": "17.0.2",
     "react-awesome-modal": "^2.0.5",
-    "react-beautiful-dnd": "^13.1.0",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",
     "react-dnd-touch-backend": "^14.1.1",

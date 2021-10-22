@@ -17,14 +17,19 @@ let tasks = [
   { id: uuidv4(), title: "Helpdesk Call GG999", status: "done" },
 ];
 
-let statusData = ["todo", "development", "testing", "done"];
+let statusData = [
+  { name: "todo", mapping: "To Do" },
+  { name: "development", mapping: "Development" },
+  { name: "testing", mapping: "Testing" },
+  { name: "done", mapping: "Done" },
+];
 
-let statusMapping = {
-  todo: "To Do",
-  development: "Development",
-  testing: "Testing",
-  done: "Done",
-};
+// let statusMapping = {
+//   todo: "To Do",
+//   development: "Development",
+//   testing: "Testing",
+//   done: "Done",
+// };
 
 class TrelloBoard extends Component {
   constructor(props) {
@@ -36,7 +41,7 @@ class TrelloBoard extends Component {
       isUserAgentMobile: false,
       searchedCard: "",
       openDrawer: false,
-      isMobileWidth: false,
+      isMobileWidth: null,
     };
   }
 
@@ -97,101 +102,105 @@ class TrelloBoard extends Component {
       openDrawer,
     } = this.state;
 
+    let kanbanBoardCardList = (
+      <>
+        <div className="row mr-0 py-2">
+          <div className="col-md-3 d-flex justify-content-center justify-content-md-start align-items-center">
+            <h4 className="text-white mb-0 ml-md-5 ml-2">Kanban Board</h4>
+          </div>
+          <div className="col-md-4 ml-3 ml-md-0 d-flex justify-content-center w-100 p-0 p-md-2">
+            <form className="form-inline flex-nowrap w-100  justify-content-center">
+              <input
+                className="form-control form-control-sm mr-sm-2 w-75"
+                type="search"
+                placeholder="Search"
+                aria-label="Search"
+                onChange={(e) =>
+                  this.setState({ searchedCard: e.target.value.trim() })
+                }
+              />
+              <button
+                className="btn btn-success btn-sm my-2 my-sm-0 ml-2 ml-md-0 "
+                type="submit"
+                onClick={this._onSearchQquery}
+              >
+                Search
+              </button>
+            </form>
+          </div>
+          <div className="col-md-5 d-flex justify-content-between">
+            <div className="d-flex align-items-center">
+              <button
+                className="btn btn-sm btn-success ml-3 ml-md-0"
+                onClick={() => this.setState({ openAddTaskModal: true })}
+              >
+                Add Task
+              </button>
+            </div>
+            <div className="d-flex align-items-center">
+              <div className="d-flex align-items-center border-left">
+                <button className={`btn btn-sm mr-2 ml-3 ${style.filterBtns}`}>
+                  Filter
+                </button>
+                <button
+                  className={`btn btn-sm ${style.filterBtns}`}
+                  onClick={() => this.setState({ openDrawer: true })}
+                >
+                  Show Menu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className={`ml-3 mr-0 mt-1 ${style.kanbanBoardTask_list}`}>
+          {statusData.map((val) => (
+            <KanbanColumn status={val.name} key={val.name}>
+              <div className={`${style.eachColumn}`}>
+                <div className={`${style.columnHeading} ml-3`}>
+                  {val.mapping}
+                </div>
+                {tasks ? (
+                  <div className="test1">
+                    {tasks
+                      .filter(
+                        (item) =>
+                          item.title.toLowerCase().indexOf(searchQuery) !==
+                            -1 ||
+                          item.status.toLowerCase().indexOf(searchQuery) !== -1
+                      )
+                      .filter((item) => item.status === val.name)
+                      .map((item) => (
+                        <KanbanItem
+                          id={item.id}
+                          onDrop={this._onUpdateStatus}
+                          key={item.id}
+                        >
+                          <div className={`${style.eachitem}`}>
+                            {item.title}
+                          </div>
+                        </KanbanItem>
+                      ))}
+                  </div>
+                ) : (
+                  <span>No Value</span>
+                )}
+              </div>
+            </KanbanColumn>
+          ))}
+        </div>
+      </>
+    );
+
     return (
       <>
         <div>
           <DndProvider
-            backend={isMobileWidth ? TouchBackend : HTML5Backend}
+            backend={TouchBackend}
             options={{ enableMouseEvents: true }}
           >
-            <div className="row mr-0 py-2">
-              <div className="col-md-3 d-flex justify-content-center justify-content-md-start align-items-center">
-                <h4 className="text-white mb-0 ml-md-5 ml-2">Kanban Board</h4>
-              </div>
-              <div className="col-md-4 ml-3 ml-md-0 d-flex justify-content-center w-100 p-0 p-md-2">
-                <form className="form-inline flex-nowrap w-100  justify-content-center">
-                  <input
-                    className="form-control form-control-sm mr-sm-2 w-75"
-                    type="search"
-                    placeholder="Search"
-                    aria-label="Search"
-                    onChange={(e) =>
-                      this.setState({ searchedCard: e.target.value.trim() })
-                    }
-                  />
-                  <button
-                    className="btn btn-success btn-sm my-2 my-sm-0 ml-2 ml-md-0 "
-                    type="submit"
-                    onClick={this._onSearchQquery}
-                  >
-                    Search
-                  </button>
-                </form>
-              </div>
-              <div className="col-md-5 d-flex justify-content-between">
-                <div className="d-flex align-items-center">
-                  <button
-                    className="btn btn-sm btn-success ml-3 ml-md-0"
-                    onClick={() => this.setState({ openAddTaskModal: true })}
-                  >
-                    Add Task
-                  </button>
-                </div>
-                <div className="d-flex align-items-center">
-                  <div className = 'd-flex align-items-center border-left'>
-                    <button
-                      className={`btn btn-sm mr-2 ml-3 ${style.filterBtns}`}
-                    >
-                      Filter
-                    </button>
-                    <button
-                      className={`btn btn-sm ${style.filterBtns}`}
-                      onClick={() => this.setState({ openDrawer: true })}
-                    >
-                      Show Menu
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className={`ml-3 mr-0 mt-1 ${style.kanbanBoardTask_list}`}>
-              {statusData.map((val) => (
-                <KanbanColumn status={val} key={val}>
-                  <div className={`${style.eachColumn}`}>
-                    <div className={`${style.columnHeading} ml-3`}>
-                      {statusMapping[val]}
-                    </div>
-                    {tasks ? (
-                      <div className="test1">
-                        {tasks
-                          .filter(
-                            (item) =>
-                              item.title.toLowerCase().indexOf(searchQuery) !==
-                                -1 ||
-                              item.status.toLowerCase().indexOf(searchQuery) !==
-                                -1
-                          )
-                          .filter((item) => item.status === val)
-                          .map((item) => (
-                            <KanbanItem
-                              id={item.id}
-                              onDrop={this._onUpdateStatus}
-                              key={item.id}
-                            >
-                              <div className={`${style.eachitem}`}>
-                                {item.title}
-                              </div>
-                            </KanbanItem>
-                          ))}
-                      </div>
-                    ) : (
-                      <span>No Value</span>
-                    )}
-                  </div>
-                </KanbanColumn>
-              ))}
-            </div>
+            {kanbanBoardCardList}
           </DndProvider>
+
           {openAddTaskModal && (
             <AddTaskModal
               visible={openAddTaskModal}
