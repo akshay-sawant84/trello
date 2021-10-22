@@ -33,7 +33,7 @@ const AddTaskModal = ({ visible, onHide, addTask }) => {
         <h3 className="text-center w-100 mb-4 mt-3">Add Task</h3>
         <div className="col-md-12 d-flex justify-content-center align-items-center flex-column h-100">
           <input
-            class="form-control text-capitalize"
+            class="form-control"
             type="text"
             placeholder="Add Task"
             onChange={(e) => settask(e.target.value)}

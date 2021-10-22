@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import AddTaskModal from "../AddTaskModal/AddTaskModal";
 import { DndProvider, DropTarget, DragSource } from "react-dnd";
 import { TouchBackend } from "react-dnd-touch-backend";
-import { HTML5Backend } from "react-dnd-html5-backend";
 import { v4 as uuidv4 } from "uuid";
 import style from "../../styles/Board.module.css";
 import Drawer from "../Drawer/Drawer";
@@ -24,13 +23,6 @@ let statusData = [
   { name: "done", mapping: "Done" },
 ];
 
-// let statusMapping = {
-//   todo: "To Do",
-//   development: "Development",
-//   testing: "Testing",
-//   done: "Done",
-// };
-
 class TrelloBoard extends Component {
   constructor(props) {
     super(props);
@@ -38,29 +30,16 @@ class TrelloBoard extends Component {
       tasks,
       openAddTaskModal: false,
       searchQuery: "",
-      isUserAgentMobile: false,
       searchedCard: "",
       openDrawer: false,
-      isMobileWidth: null,
     };
   }
 
   componentDidMount() {
-    if (navigator.userAgentData.mobile) {
-      this.setState({ isUserAgentMobile: true });
-    } else {
-      this.setState({ isUserAgentMobile: true });
-    }
-
     let data = localStorage.getItem("tasksData");
     if (data) {
       let parsedData = JSON.parse(data);
       this.setState({ tasks: parsedData });
-    }
-
-    const media = window.matchMedia("(max-width: 600px)");
-    if (media) {
-      this.setState({ isMobileWidth: true });
     }
   }
 
@@ -93,20 +72,14 @@ class TrelloBoard extends Component {
   };
 
   render() {
-    const {
-      tasks,
-      openAddTaskModal,
-      searchQuery,
-      isMobileWidth,
-      searchedCard,
-      openDrawer,
-    } = this.state;
+    const { tasks, openAddTaskModal, searchQuery, searchedCard, openDrawer } =
+      this.state;
 
     let kanbanBoardCardList = (
       <>
         <div className="row mr-0 py-2">
           <div className="col-md-3 d-flex justify-content-center justify-content-md-start align-items-center">
-            <h4 className="text-white mb-0 ml-md-5 ml-2">Kanban Board</h4>
+            <h4 className="text-white mb-0 ml-md-2 ml-lg-5 ml-2">Kanban Board</h4>
           </div>
           <div className="col-md-4 ml-3 ml-md-0 d-flex justify-content-center w-100 p-0 p-md-2">
             <form className="form-inline flex-nowrap w-100  justify-content-center">
@@ -152,9 +125,9 @@ class TrelloBoard extends Component {
             </div>
           </div>
         </div>
-        <div className={`ml-3 mr-0 mt-1 ${style.kanbanBoardTask_list}`}>
+        <div className={`ml-3 mr-3 mt-1 ${style.kanbanBoardTask_list}`}>
           {statusData.map((val) => (
-            <KanbanColumn status={val.name} key={val.name}>
+            <TrelloCardColumn status={val.name} key={val.name}>
               <div className={`${style.eachColumn}`}>
                 <div className={`${style.columnHeading} ml-3`}>
                   {val.mapping}
@@ -170,7 +143,7 @@ class TrelloBoard extends Component {
                       )
                       .filter((item) => item.status === val.name)
                       .map((item) => (
-                        <KanbanItem
+                        <TrelloCardItem
                           id={item.id}
                           onDrop={this._onUpdateStatus}
                           key={item.id}
@@ -178,14 +151,14 @@ class TrelloBoard extends Component {
                           <div className={`${style.eachitem}`}>
                             {item.title}
                           </div>
-                        </KanbanItem>
+                        </TrelloCardItem>
                       ))}
                   </div>
                 ) : (
                   <span>No Value</span>
                 )}
               </div>
-            </KanbanColumn>
+            </TrelloCardColumn>
           ))}
         </div>
       </>
@@ -222,25 +195,23 @@ class TrelloBoard extends Component {
 
 export default TrelloBoard;
 
-let boxTarget = {
+let targetedCard = {
   drop(props) {
     return { name: props.status };
   },
 };
 
-class KanbanColumn extends React.Component {
+class TrelloCardColumn extends Component {
   render() {
     return this.props.connectDropTarget(<div>{this.props.children}</div>);
   }
 }
 
-KanbanColumn = DropTarget("kanbanItem", boxTarget, (connect, monitor) => ({
+TrelloCardColumn = DropTarget("kanbanItem", targetedCard, (connect, monitor) => ({
   connectDropTarget: connect.dropTarget(),
   isOver: monitor.isOver(),
   canDrop: monitor.canDrop(),
-}))(KanbanColumn);
-
-// Item
+}))(TrelloCardColumn);
 
 let boxSource = {
   beginDrag(props) {
@@ -258,13 +229,13 @@ let boxSource = {
   },
 };
 
-class KanbanItem extends React.Component {
+class TrelloCardItem extends React.Component {
   render() {
     return this.props.connectDragSource(<div>{this.props.children}</div>);
   }
 }
 
-KanbanItem = DragSource("kanbanItem", boxSource, (connect, monitor) => ({
+TrelloCardItem = DragSource("kanbanItem", boxSource, (connect, monitor) => ({
   connectDragSource: connect.dragSource(),
   isDragging: monitor.isDragging(),
-}))(KanbanItem);
+}))(TrelloCardItem);
