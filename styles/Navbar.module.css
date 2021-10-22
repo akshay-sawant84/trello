@@ -1,0 +1,20 @@
+.kanban_navbar {
+  background-color: #026aa7;
+}
+
+.kanban_navbarBtn:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+  outline: 0;
+}
+
+.collaborateHeading {
+  background: #faf3c0;
+}
+
+.main_heading{
+  opacity: 0.5;
+}
+
+.main_heading:hover{
+  opacity: 1;
+}
