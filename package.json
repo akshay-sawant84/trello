@@ -9,9 +9,11 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "axios": "^0.23.0",
     "bootstrap": "^4.6.0",
     "next": "11.1.2",
     "react": "17.0.2",
+    "react-autocomplete": "^1.8.1",
     "react-awesome-modal": "^2.0.5",
     "react-dnd": "^14.0.4",
     "react-dnd-html5-backend": "^14.0.2",

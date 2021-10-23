@@ -1,0 +1,25 @@
+.reactAutocomplete div:first-child,
+.reactAutocomplete input {
+  width: 100%;
+}
+
+.reactAutocomplete div:nth-child(2) {
+  padding: 0 !important;
+  max-height: 25% !important;
+
+}
+
+.reactAutocomplete div:nth-child(2) p {
+  padding: 5px 8px;
+}
+
+.reactAutocomplete input {
+  height: 32px;
+  padding-left: 8px;
+  outline: none !important;
+}
+
+.reactAutocomplete input:focus-visible {
+  outline: none !important;
+  border: none !important;
+}

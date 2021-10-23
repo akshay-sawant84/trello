@@ -5,23 +5,8 @@ import { TouchBackend } from "react-dnd-touch-backend";
 import { v4 as uuidv4 } from "uuid";
 import style from "../../styles/Board.module.css";
 import Drawer from "../Drawer/Drawer";
-
-let tasks = [
-  { id: uuidv4(), title: "Helpdesk Call AA999", status: "todo" },
-  { id: uuidv4(), title: "Helpdesk Call BB999", status: "todo" },
-  { id: uuidv4(), title: "Helpdesk Call CC999", status: "development" },
-  { id: uuidv4(), title: "Helpdesk Call EE999", status: "development" },
-  { id: uuidv4(), title: "Helpdesk Call DD999", status: "testing" },
-  { id: uuidv4(), title: "Helpdesk Call FF999", status: "testing" },
-  { id: uuidv4(), title: "Helpdesk Call GG999", status: "done" },
-];
-
-let statusData = [
-  { name: "todo", mapping: "To Do" },
-  { name: "development", mapping: "Development" },
-  { name: "testing", mapping: "Testing" },
-  { name: "done", mapping: "Done" },
-];
+import { tasks, statusData } from "../Constants/Constants";
+import BoardTitle from "../Reusable/BoardTitle";
 
 class TrelloBoard extends Component {
   constructor(props) {
@@ -79,7 +64,7 @@ class TrelloBoard extends Component {
       <>
         <div className="row mr-0 py-2">
           <div className="col-md-3 d-flex justify-content-center justify-content-md-start align-items-center">
-            <h4 className="text-white mb-0 ml-md-2 ml-lg-5 ml-2">Kanban Board</h4>
+            <BoardTitle title="Kanban Board" />
           </div>
           <div className="col-md-4 ml-3 ml-md-0 d-flex justify-content-center w-100 p-0 p-md-2">
             <form className="form-inline flex-nowrap w-100  justify-content-center">
@@ -207,11 +192,15 @@ class TrelloCardColumn extends Component {
   }
 }
 
-TrelloCardColumn = DropTarget("kanbanItem", targetedCard, (connect, monitor) => ({
-  connectDropTarget: connect.dropTarget(),
-  isOver: monitor.isOver(),
-  canDrop: monitor.canDrop(),
-}))(TrelloCardColumn);
+TrelloCardColumn = DropTarget(
+  "kanbanItem",
+  targetedCard,
+  (connect, monitor) => ({
+    connectDropTarget: connect.dropTarget(),
+    isOver: monitor.isOver(),
+    canDrop: monitor.canDrop(),
+  })
+)(TrelloCardColumn);
 
 let boxSource = {
   beginDrag(props) {
