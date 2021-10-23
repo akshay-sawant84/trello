@@ -39,7 +39,7 @@ const Filtering = () => {
   }, []);
 
   return (
-    <div className={`row mx-0 ${style.reactAutocomplete}`}>
+    <div className={`row mt-3 mx-0 ${style.reactAutocomplete}`}>
       <div className="offset-md-4 col-md-4">
         <ReactAutocomplete
           inputProps={{ placeholder: "Search..." }}
